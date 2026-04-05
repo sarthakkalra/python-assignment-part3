@@ -155,7 +155,33 @@ def read_file_safe(filename):
 
 print(read_file_safe("python_notes.txt"))
 print(read_file_safe("ghost_file.txt"))
+# ---- Robust API call ----
 
+try:
+    url = "https://dummyjson.com/products/add"
+    payload = {
+        "title": "My Custom Product",
+        "price": 999,
+        "category": "electronics",
+        "description": "A product I created via API"
+    }
+
+    response = requests.post(url, json=payload, timeout=5)
+    print("\nPOST Response:")
+    print(response.json())
+
+except requests.exceptions.ConnectionError:
+    print("Connection failed. Please check your internet.")
+    log_error("post_product", "ConnectionError", "No connection")
+
+except requests.exceptions.Timeout:
+    print("Request timed out. Try again later.")
+    log_error("post_product", "Timeout", "API timeout")
+
+except Exception as e:
+    print(e)
+    log_error("post_product", "Exception", str(e))
+ 
 
 # ---- Input Loop ----
 while True:
